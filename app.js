@@ -33,14 +33,14 @@ var budgetController = (function() {
       // ID = last ID + 1
 
       // Create new ID
-      if(data.allItems[type].length > 0) {
+      if (data.allItems[type].length > 0) {
         ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
       }else {
         ID = 0;
       }
 
       // Create new item based on 'inc' or 'exp' type
-      if(type === 'exp') {
+      if (type === 'exp') {
         newItem = new Expense(ID, desc, val);
       }else if (type === 'inc') {
         newItem = new Income(ID, desc, val);
@@ -80,7 +80,7 @@ var UIController = (function() {
       return {
         type: document.querySelector(DOMstrings.inputType).value, // Will be either inc or exp
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value
+        value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
       };
     },
 
@@ -88,7 +88,7 @@ var UIController = (function() {
       var html, newHtml, element;
       // Create HTML string with placholder text
 
-      if(type === 'inc') {
+      if (type === 'inc') {
         element = DOMstrings.incomeContainer;
 
         html = '<div class="item clearfix" id="income-%id%"> <div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
@@ -141,12 +141,20 @@ var controller = (function(budgetCtrl, UICtrl) {
     document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
     document.addEventListener('keypress', function (event) {
-      if(event.keyCode === 13 || event.which === 13) {
+      if (event.keyCode === 13 || event.which === 13) {
         ctrlAddItem();
       }
     });
   };
 
+  var updateBudget = function() {
+
+    // 1. Caluculate the budget
+
+    // 2. Return the budget
+
+    // 5. Display the budget on the UI
+  };
 
   var ctrlAddItem = function() {
     var input, newItem;
@@ -154,18 +162,21 @@ var controller = (function(budgetCtrl, UICtrl) {
     // 1. Get the filed input data
     input = UICtrl.getinput();
 
-  // 2. Add the item to the budget controller
-    newItem = budgetController.addItem(input.type, input.description, input.value);
+    if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
 
-  // 3. Add the item to the UI
-    UICtrl.addListItem(newItem, input.type);
+      // 2. Add the item to the budget controller
+        newItem = budgetController.addItem(input.type, input.description, input.value);
 
-  // 4. Clear the fields
-    UICtrl.clearFields();
+      // 3. Add the item to the UI
+        UICtrl.addListItem(newItem, input.type);
 
-  // 5. Caluculate the budget
+      // 4. Clear the fields
+        UICtrl.clearFields();
 
-  // 6. Display the budget on the UI
+      // 5. Calulate and ipdate budget
+        updateBudget();
+
+    }
 
   };
 
